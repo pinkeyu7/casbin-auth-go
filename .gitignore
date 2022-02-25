@@ -19,3 +19,16 @@
 
 # Go workspace file
 go.work
+
+/.idea/
+/.env
+/tmp
+/models/xo_models/
+/node_modules
+package.json
+package-lock.json
+.DS_Store
+
+main
+/models/xorm_models/
+/docs/
