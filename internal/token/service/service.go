@@ -27,7 +27,10 @@ func NewService(sar sys_account.Repository, tc token.Cache) token.Service {
 
 func (s *Service) GenToken(req *apireq.GetSysAccountToken) (*apires.SysAccountToken, error) {
 	// Check Account Exist
-	acc, err := s.sysAccRepo.FindOne(&model.SysAccount{Account: req.Account})
+	acc, err := s.sysAccRepo.FindOne(&model.SysAccount{
+		SystemId: req.SystemId,
+		Account:  req.Account,
+	})
 	if err != nil {
 		findErr := er.NewAppErr(http.StatusInternalServerError, er.UnknownError, "find account error.", err)
 		return nil, findErr
