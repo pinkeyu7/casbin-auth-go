@@ -67,6 +67,10 @@ func main() {
 	// Create Sys Account Role
 	sysAccountRoleSeeds := seed.AllSysAccountRole()
 	run(engine, sysAccountRoleSeeds)
+
+	// Create Casbin
+	casbinSeeds := seed.AllCabin()
+	run(engine, casbinSeeds)
 }
 
 func run(engine *xorm.Engine, channelSeeds []seed.Seed) {
