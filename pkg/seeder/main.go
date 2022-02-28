@@ -59,6 +59,14 @@ func main() {
 	// Create Sys Role Permission
 	sysRolePermissionSeeds := seed.AllSysRolePermission()
 	run(engine, sysRolePermissionSeeds)
+
+	// Crete Sys Account
+	sysAccountSeeds := seed.AllSysAccount()
+	run(engine, sysAccountSeeds)
+
+	// Create Sys Account Role
+	sysAccountRoleSeeds := seed.AllSysAccountRole()
+	run(engine, sysAccountRoleSeeds)
 }
 
 func run(engine *xorm.Engine, channelSeeds []seed.Seed) {
