@@ -24,6 +24,6 @@ sandbox:
   dialect: mysql
   datasource: root:secret@tcp(mysql:3306)/defaultdb?parseTime=true
   ## sandbox / master / localhost 因為是使用 submodule 引入到各專案執行，所以目錄路徑使用 migration 開頭
-  ## 在 indochat-migration 執行時，起始路徑則為 migrations 開頭
+  ## 在 migration 執行時，起始路徑則為 migrations 開頭
   dir: migration
   table: migrations
