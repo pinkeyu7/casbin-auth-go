@@ -18,6 +18,10 @@ func SystemV1(r *gin.Engine) {
 		apiV1.ListSystem(c)
 	})
 
+	v1Auth.GET("/:id", func(c *gin.Context) {
+		apiV1.GetSystem(c)
+	})
+
 	v1Auth.PUT("/:id", func(c *gin.Context) {
 		apiV1.EditSystem(c)
 	})
