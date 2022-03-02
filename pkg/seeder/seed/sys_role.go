@@ -7,9 +7,10 @@ import (
 
 func CreateSysRole(engine *xorm.Engine, name string, systemId int) error {
 	role := model.SysRole{
-		Sort:     0,
-		SystemId: systemId,
-		Name:     name,
+		Sort:        0,
+		SystemId:    systemId,
+		Name:        name,
+		DisplayName: name,
 	}
 
 	_, err := engine.Insert(&role)

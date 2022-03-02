@@ -2,6 +2,7 @@ package seed
 
 import (
 	"casbin-auth-go/dto/model"
+	"casbin-auth-go/internal/system/system"
 	"github.com/brianvoe/gofakeit/v4"
 	"xorm.io/xorm"
 )
@@ -32,7 +33,7 @@ func AllSystem() []Seed {
 		{
 			Name: "Create System - Admin Permission",
 			Run: func(engine *xorm.Engine) error {
-				err := CreateSystem(engine, "Admin Permission", "AP", "AP", gofakeit.Name(),
+				err := CreateSystem(engine, "Admin Backend", system.TypeAdminBackend, system.TypeAdminBackend, gofakeit.Name(),
 					gofakeit.City(), gofakeit.Phone(), gofakeit.Animal(), 0, "*", "*")
 				return err
 			},
@@ -40,7 +41,7 @@ func AllSystem() []Seed {
 		{
 			Name: "Create System - Address Book System",
 			Run: func(engine *xorm.Engine) error {
-				err := CreateSystem(engine, "Address Book System", "ABS", "ABS", gofakeit.Name(),
+				err := CreateSystem(engine, "Address Book System", system.TypeAddressBook, system.TypeAddressBook, gofakeit.Name(),
 					gofakeit.City(), gofakeit.Phone(), gofakeit.Animal(), 10000, "*", "*")
 				return err
 			},
