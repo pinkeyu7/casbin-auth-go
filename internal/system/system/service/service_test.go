@@ -7,12 +7,15 @@ import (
 	"casbin-auth-go/dto/model"
 	"casbin-auth-go/internal/system/system"
 	sysRepo "casbin-auth-go/internal/system/system/repository"
+	"casbin-auth-go/pkg/er"
 	"casbin-auth-go/pkg/valider"
 	"fmt"
 	"github.com/brianvoe/gofakeit/v4"
 	_ "go/types"
 	"log"
+	"net/http"
 	"os"
+	"strconv"
 	"testing"
 
 	_ "github.com/brianvoe/gofakeit/v4"
@@ -92,6 +95,39 @@ func TestService_ListSystem(t *testing.T) {
 			assert.Equal(t, tc.WantCount, data.Total)
 		})
 	}
+}
+
+func TestService_GetSystem(t *testing.T) {
+	// Arrange
+	redis, _ := driver.NewRedis()
+	orm, _ := driver.NewXorm()
+
+	sc := sysRepo.NewCache(redis)
+	sr := sysRepo.NewRepository(orm, sc)
+	ss := NewService(sr)
+
+	// No data
+	sysId := 10
+
+	// Act
+	sys, err := ss.GetSystem(sysId)
+
+	// Assert
+	assert.NotNil(t, err)
+	assert.Nil(t, sys)
+	notFoundErr := err.(*er.AppError)
+	assert.Equal(t, http.StatusBadRequest, notFoundErr.StatusCode)
+	assert.Equal(t, strconv.Itoa(er.ResourceNotFoundError), notFoundErr.Code)
+
+	// Has data
+	sysId = 1
+
+	// Act
+	sys, err = ss.GetSystem(sysId)
+
+	// Assert
+	assert.Nil(t, err)
+	assert.Equal(t, sysId, sys.Id)
 }
 
 func TestService_AddSystem(t *testing.T) {

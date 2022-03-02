@@ -69,6 +69,20 @@ func (s *Service) ListSystem(req *apireq.ListSystem) (*apires.ListSystem, error)
 	return res, nil
 }
 
+func (s *Service) GetSystem(sysId int) (*model.System, error) {
+	sys, err := s.sysRepo.FindOne(&model.System{Id: sysId})
+	if err != nil {
+		findErr := er.NewAppErr(http.StatusInternalServerError, er.UnknownError, "find system error.", err)
+		return nil, findErr
+	}
+	if sys == nil {
+		notFoundErr := er.NewAppErr(http.StatusBadRequest, er.ResourceNotFoundError, "system not found.", nil)
+		return nil, notFoundErr
+	}
+
+	return sys, nil
+}
+
 func (s *Service) AddSystem(req *apireq.AddSystem) error {
 	err := s.sysRepo.Insert(req)
 	if err != nil {
