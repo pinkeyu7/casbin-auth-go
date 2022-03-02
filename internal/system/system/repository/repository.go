@@ -2,6 +2,7 @@ package repository
 
 import (
 	"casbin-auth-go/dto/apireq"
+	"casbin-auth-go/dto/apires"
 	"casbin-auth-go/dto/model"
 	"casbin-auth-go/internal/system/system"
 	"strings"
@@ -127,16 +128,16 @@ func (r *Repository) Insert(req *apireq.AddSystem) error {
 	return err
 }
 
-func (r *Repository) Find(listType string, offset, limit int) ([]*model.System, error) {
+func (r *Repository) Find(listType string, offset, limit int) ([]*apires.System, error) {
 	var err error
-	list := make([]*model.System, 0)
+	list := make([]*apires.System, 0)
 	switch listType {
 	case system.ListTypeEnable:
-		err = r.orm.Where(" is_disable = ? ", 0).Limit(limit, offset).Find(&list)
+		err = r.orm.Table("system").Where(" is_disable = ? ", 0).Limit(limit, offset).Find(&list)
 	case system.ListTypeDisable:
-		err = r.orm.Where(" is_disable = ? ", 1).Limit(limit, offset).Find(&list)
+		err = r.orm.Table("system").Where(" is_disable = ? ", 1).Limit(limit, offset).Find(&list)
 	case system.ListTypeAll:
-		err = r.orm.Limit(limit, offset).Find(&list)
+		err = r.orm.Table("system").Limit(limit, offset).Find(&list)
 	}
 
 	if err != nil {
