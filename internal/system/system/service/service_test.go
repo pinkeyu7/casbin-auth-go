@@ -80,7 +80,13 @@ func TestService_ListSystem(t *testing.T) {
 	for _, tc := range testCases {
 		tc := tc
 		t.Run(fmt.Sprintf("List System,ListType:%s,Page:%d,PerPage:%d", tc.ListType, tc.Page, tc.PerPage), func(t *testing.T) {
-			data, err := ss.ListSystem(tc.ListType, tc.Page, tc.PerPage)
+			req := apireq.ListSystem{
+				ListType: tc.ListType,
+				Page:     tc.Page,
+				PerPage:  tc.PerPage,
+			}
+
+			data, err := ss.ListSystem(&req)
 			assert.Nil(t, err)
 			assert.Len(t, data.List, tc.WantCount)
 			assert.Equal(t, tc.WantCount, data.Total)

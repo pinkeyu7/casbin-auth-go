@@ -20,8 +20,21 @@ func NewService(sr system.Repository) system.Service {
 	return &Service{sysRepo: sr}
 }
 
-func (s *Service) ListSystem(listType string, page, perPage int) (*apires.ListSystem, error) {
-	// 驗證狀態參數
+func (s *Service) ListSystem(req *apireq.ListSystem) (*apires.ListSystem, error) {
+	listType := req.ListType
+	page := req.Page
+	perPage := req.PerPage
+
+	if page <= 1 {
+		page = 1
+	}
+
+	if perPage <= 1 {
+		perPage = 1
+	}
+
+	offset := (page - 1) * perPage
+
 	listTypes := []string{system.ListTypeEnable, system.ListTypeDisable, system.ListTypeAll}
 	if contains := helper.StringContains(listTypes, listType); !contains {
 		filterErr := er.NewAppErr(http.StatusBadRequest, er.ErrorParamInvalid, "list type error.", nil)
@@ -34,15 +47,6 @@ func (s *Service) ListSystem(listType string, page, perPage int) (*apires.ListSy
 		return nil, countErr
 	}
 
-	if page <= 1 {
-		page = 1
-	}
-
-	if perPage <= 1 {
-		perPage = 1
-	}
-
-	offset := (page - 1) * perPage
 	data, err := s.sysRepo.Find(listType, offset, perPage)
 	if err != nil {
 		selectErr := er.NewAppErr(http.StatusInternalServerError, er.UnknownError, "find system error.", err)

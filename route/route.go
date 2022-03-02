@@ -44,6 +44,7 @@ func Init() *gin.Engine {
 	r.Use(cors.New(corsConf))
 
 	TokenV1(r, store)
+	SystemV1(r)
 
 	return r
 }

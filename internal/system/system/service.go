@@ -6,7 +6,7 @@ import (
 )
 
 type Service interface {
-	ListSystem(listType string, page, perPage int) (*apires.ListSystem, error)
+	ListSystem(req *apireq.ListSystem) (*apires.ListSystem, error)
 	AddSystem(req *apireq.AddSystem) error
 	EditSystem(sysId int, req *apireq.EditSystem) error
 }

@@ -1,5 +1,11 @@
 package apireq
 
+type ListSystem struct {
+	ListType string `form:"list_type" validate:"omitempty"`
+	Page     int    `form:"page" validate:"required,numeric"`
+	PerPage  int    `form:"per_page" validate:"required,numeric"`
+}
+
 type AddSystem struct {
 	AccountId        int      `json:"account_id" validate:"required"`
 	Name             string   `json:"name" validate:"required"`
