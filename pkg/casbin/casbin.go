@@ -72,7 +72,7 @@ func AddUserRole(systemTag string, accountId, oldRoleId, newRoleId int64) (bool,
 	return added, err
 }
 
-func AddRolePolicy(systemTag string, roleId int64, perms []*model.SysPermission) (bool, error) {
+func AddRolePolicy(systemTag string, roleId int, perms []*model.SysPermission) (bool, error) {
 	e := Init()
 
 	var added bool = true
@@ -83,13 +83,13 @@ func AddRolePolicy(systemTag string, roleId int64, perms []*model.SysPermission)
 		if perms[i].AllowApiPath == "" || perms[i].Action == "" {
 			continue
 		}
-		added, err = e.AddPolicy(strconv.FormatInt(roleId, 10), perms[i].AllowApiPath, perms[i].Action)
+		added, err = e.AddPolicy(roleId, perms[i].AllowApiPath, perms[i].Action)
 	}
 	return added, err
 }
 
-func RemoveRolePolicy(roleId int64) (bool, error) {
+func RemoveRolePolicy(roleId int) (bool, error) {
 	e := Init()
-	removed, err := e.RemovePolicy(strconv.FormatInt(roleId, 10))
+	removed, err := e.RemovePolicy(roleId)
 	return removed, err
 }
