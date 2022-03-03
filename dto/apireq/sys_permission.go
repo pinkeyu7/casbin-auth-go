@@ -14,3 +14,7 @@ type EditSysPermission struct {
 	Slug        string `json:"slug" validate:"required"`
 	Description string `json:"description" validate:"required"`
 }
+
+type DeleteSysPermission struct {
+	AccountId int `json:"account_id" validate:"required"`
+}

@@ -52,5 +52,5 @@ func GetToken(c *gin.Context) {
 		return
 	}
 
-	c.JSON(200, res)
+	c.JSON(http.StatusOK, res)
 }

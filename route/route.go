@@ -45,6 +45,7 @@ func Init() *gin.Engine {
 
 	TokenV1(r, store)
 	SystemV1(r)
+	SysPermissionV1(r)
 
 	return r
 }
