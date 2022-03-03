@@ -9,6 +9,7 @@ import (
 	sysRoleRepo "casbin-auth-go/internal/system/sys_role/repository"
 	sysRepo "casbin-auth-go/internal/system/system/repository"
 	"casbin-auth-go/pkg/valider"
+	"fmt"
 	"github.com/stretchr/testify/assert"
 	_ "go/types"
 	"log"
@@ -40,12 +41,69 @@ func setUp() {
 	valider.Init()
 }
 
-func TestService_AddPermission(t *testing.T) {
+func TestService_ListPermission(t *testing.T) {
 	// Arrange
+	redis, _ := driver.NewRedis()
 	orm, _ := driver.NewXorm()
 
+	sc := sysRepo.NewCache(redis)
+	sr := sysRepo.NewRepository(orm, sc)
 	spr := sysPermRepo.NewRepository(orm)
-	sps := NewService(spr)
+	sps := NewService(spr, sr)
+
+	// Act
+	testCases := []struct {
+		SystemId  int
+		PerPage   int
+		Page      int
+		WantCount int
+	}{
+		{
+			0,
+			10,
+			1,
+			6,
+		},
+		{
+			1,
+			10,
+			1,
+			2,
+		},
+		{
+			2,
+			10,
+			1,
+			4,
+		},
+	}
+	// Act
+	for _, tc := range testCases {
+		tc := tc
+		t.Run(fmt.Sprintf("List Sys Permission,System Id:%d,Page:%d,PerPage:%d", tc.SystemId, tc.Page, tc.PerPage), func(t *testing.T) {
+			req := apireq.ListSysPermission{
+				SystemId: tc.SystemId,
+				Page:     tc.Page,
+				PerPage:  tc.PerPage,
+			}
+
+			data, err := sps.ListPermission(&req)
+			assert.Nil(t, err)
+			assert.Len(t, data.List, tc.WantCount)
+			assert.Equal(t, tc.WantCount, data.Total)
+		})
+	}
+}
+
+func TestService_AddPermission(t *testing.T) {
+	// Arrange
+	redis, _ := driver.NewRedis()
+	orm, _ := driver.NewXorm()
+
+	sc := sysRepo.NewCache(redis)
+	sr := sysRepo.NewRepository(orm, sc)
+	spr := sysPermRepo.NewRepository(orm)
+	sps := NewService(spr, sr)
 
 	req := apireq.AddSysPermission{
 		AccountId:    1,
@@ -68,10 +126,13 @@ func TestService_AddPermission(t *testing.T) {
 
 func TestService_EditPermission(t *testing.T) {
 	// Arrange
+	redis, _ := driver.NewRedis()
 	orm, _ := driver.NewXorm()
 
+	sc := sysRepo.NewCache(redis)
+	sr := sysRepo.NewRepository(orm, sc)
 	spr := sysPermRepo.NewRepository(orm)
-	sps := NewService(spr)
+	sps := NewService(spr, sr)
 
 	permId := 1
 	perm := model.SysPermission{Id: permId}
@@ -102,7 +163,7 @@ func TestService_DeletePermission(t *testing.T) {
 	sr := sysRepo.NewRepository(orm, sc)
 	srr := sysRoleRepo.NewRepository(orm)
 	spr := sysPermRepo.NewRepository(orm)
-	sps := NewService(spr)
+	sps := NewService(spr, sr)
 
 	m := model.SysPermission{
 		SystemId:     1,
@@ -114,7 +175,7 @@ func TestService_DeletePermission(t *testing.T) {
 	_, _ = orm.Insert(&m)
 
 	// Act
-	err := sps.DeletePermission(m.Id, sr, srr)
+	err := sps.DeletePermission(m.Id, srr)
 
 	// Assert
 	assert.Nil(t, err)
