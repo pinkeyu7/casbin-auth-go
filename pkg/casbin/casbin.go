@@ -83,13 +83,13 @@ func AddRolePolicy(systemTag string, roleId int, perms []*model.SysPermission) (
 		if perms[i].AllowApiPath == "" || perms[i].Action == "" {
 			continue
 		}
-		added, err = e.AddPolicy(roleId, perms[i].AllowApiPath, perms[i].Action)
+		added, err = e.AddPolicy(strconv.Itoa(roleId), perms[i].AllowApiPath, perms[i].Action)
 	}
 	return added, err
 }
 
 func RemoveRolePolicy(roleId int) (bool, error) {
 	e := Init()
-	removed, err := e.RemovePolicy(roleId)
+	removed, err := e.RemovePolicy(strconv.Itoa(roleId))
 	return removed, err
 }
