@@ -22,7 +22,7 @@ import (
 // @Tags Permission
 // @Security Bearer
 // @Param Bearer header string true "Admin JWT Token"
-// @Param Body body apireq.AddSysPermission true "Create System Permission Request"
+// @Param Body body apireq.AddSysPermission true "Request Add System Permission"
 // @Success 200 {string} string "{}"
 // @Failure 400 {object} er.AppErrorMsg "{"code":"400400","message":"Wrong parameter format or invalid"}"
 // @Failure 401 {object} er.AppErrorMsg "{"code":"400401","message":"Unauthorized"}"
