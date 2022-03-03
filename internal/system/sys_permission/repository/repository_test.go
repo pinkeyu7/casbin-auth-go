@@ -64,12 +64,9 @@ func TestRepository_Update(t *testing.T) {
 	perm := model.SysPermission{Id: 1}
 	_, _ = orm.Get(&perm)
 	m := model.SysPermission{
-		Id:           perm.Id,
-		SystemId:     4,
-		AllowApiPath: "/test_path/",
-		Action:       "post",
-		Slug:         "test_slug",
-		Description:  "test_description",
+		Id:          perm.Id,
+		Slug:        "test_slug",
+		Description: "test_description",
 	}
 
 	// Act

@@ -22,7 +22,7 @@ func (r *Repository) Insert(m *model.SysPermission) error {
 }
 
 func (r *Repository) Update(m *model.SysPermission) error {
-	_, err := r.orm.ID(m.Id).Omit("system_id", "allow_api_path", "action", "description").Update(m)
+	_, err := r.orm.ID(m.Id).Cols("slug", "description").Update(m)
 	return err
 }
 
