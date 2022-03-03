@@ -77,7 +77,7 @@ func (r *Repository) FindByIds(permIds []int) ([]*model.SysPermission, error) {
 	return list, err
 }
 
-func (r *Repository) Find(sysId int, offset, limit int) ([]*model.SysPermission, error) {
+func (r *Repository) Find(sysId, offset, limit int) ([]*model.SysPermission, error) {
 	var err error
 	list := make([]*model.SysPermission, 0)
 

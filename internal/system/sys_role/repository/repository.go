@@ -119,7 +119,7 @@ func (r *Repository) FindOne(m *model.SysRole) (*model.SysRole, error) {
 	return m, nil
 }
 
-func (r *Repository) Find(sysId int, offset, limit int) ([]*model.SysRole, error) {
+func (r *Repository) Find(sysId, offset, limit int) ([]*model.SysRole, error) {
 	var err error
 	list := make([]*model.SysRole, 0)
 

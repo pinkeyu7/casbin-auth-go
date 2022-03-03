@@ -8,7 +8,7 @@ type Repository interface {
 	Delete(sysPermId int) error
 	FindOne(m *model.SysPermission) (*model.SysPermission, error)
 	FindByIds(permIds []int) ([]*model.SysPermission, error)
-	Find(sysId int, offset, limit int) ([]*model.SysPermission, error)
+	Find(sysId, offset, limit int) ([]*model.SysPermission, error)
 	Count(sysId int) (int, error)
 	Exist(m *model.SysPermission) (bool, error)
 	FindIdsByRole(sysRoleId int) ([]int, error)
