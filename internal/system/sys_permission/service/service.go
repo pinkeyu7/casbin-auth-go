@@ -82,6 +82,16 @@ func (s *Service) ListPermission(req *apireq.ListSysPermission) (*apires.ListSys
 }
 
 func (s *Service) AddPermission(req *apireq.AddSysPermission) error {
+	sys, err := s.sysRepo.FindOne(&model.System{Id: req.SystemId})
+	if err != nil {
+		findErr := er.NewAppErr(http.StatusInternalServerError, er.UnknownError, "find system error.", err)
+		return findErr
+	}
+	if sys == nil || sys.IsDisable {
+		notFoundErr := er.NewAppErr(http.StatusBadRequest, er.ResourceNotFoundError, "system not found.", nil)
+		return notFoundErr
+	}
+
 	// Check slug exist
 	exist, err := s.sysPermRepo.Exist(&model.SysPermission{
 		SystemId: req.SystemId,
