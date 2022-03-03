@@ -46,10 +46,11 @@ func TestRepository_InsertWithPermission(t *testing.T) {
 	}
 
 	// Act
-	err := srr.InsertWithPermission(&m, nil)
+	role, err := srr.InsertWithPermission(&m, nil)
 
 	// Assert
 	assert.Nil(t, err)
+	assert.NotNil(t, role)
 
 	// Teardown
 	_, _ = orm.Where("name = ? ", m.Name).Delete(&model.SysRole{})

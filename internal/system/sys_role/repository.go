@@ -3,8 +3,8 @@ package sys_role
 import "casbin-auth-go/dto/model"
 
 type Repository interface {
-	InsertWithPermission(sysRole *model.SysRole, permIds []int) error
-	UpdateWithPermission(sysRole *model.SysRole, permIds []int) error
+	InsertWithPermission(m *model.SysRole, permIds []int) (*model.SysRole, error)
+	UpdateWithPermission(m *model.SysRole, permIds []int) error
 	FindOne(m *model.SysRole) (*model.SysRole, error)
 	Find(sysId int, offset, limit int) ([]*model.SysRole, error)
 	Count(sysId int) (int, error)

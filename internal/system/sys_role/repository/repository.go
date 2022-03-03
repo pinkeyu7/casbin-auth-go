@@ -16,22 +16,22 @@ func NewRepository(orm *xorm.EngineGroup) sys_role.Repository {
 	}
 }
 
-func (r *Repository) InsertWithPermission(sysRole *model.SysRole, permIds []int) error {
+func (r *Repository) InsertWithPermission(m *model.SysRole, permIds []int) (*model.SysRole, error) {
 	session := r.orm.NewSession()
 	defer session.Close()
 
 	err := session.Begin()
 	if err != nil {
 		_ = session.Rollback()
-		return err
+		return nil, err
 	}
 
 	// ----------------------- start session -----------------------
 
-	_, err = session.Insert(sysRole)
+	_, err = session.Insert(m)
 	if err != nil {
 		_ = session.Rollback()
-		return err
+		return nil, err
 	}
 
 	permLen := len(permIds)
@@ -39,7 +39,7 @@ func (r *Repository) InsertWithPermission(sysRole *model.SysRole, permIds []int)
 		var rolePerm = make([]*model.SysRolePermission, len(permIds))
 		for i := range permIds {
 			rolePerm[i] = &model.SysRolePermission{
-				SysRoleId:       sysRole.Id,
+				SysRoleId:       m.Id,
 				SysPermissionId: permIds[i],
 			}
 		}
@@ -47,7 +47,7 @@ func (r *Repository) InsertWithPermission(sysRole *model.SysRole, permIds []int)
 		_, err = session.Insert(rolePerm)
 		if err != nil {
 			_ = session.Rollback()
-			return err
+			return nil, err
 		}
 	}
 
@@ -55,10 +55,10 @@ func (r *Repository) InsertWithPermission(sysRole *model.SysRole, permIds []int)
 
 	_ = session.Commit()
 
-	return err
+	return m, nil
 }
 
-func (r *Repository) UpdateWithPermission(sysRole *model.SysRole, permIds []int) error {
+func (r *Repository) UpdateWithPermission(m *model.SysRole, permIds []int) error {
 	session := r.orm.NewSession()
 	defer session.Close()
 
@@ -70,7 +70,7 @@ func (r *Repository) UpdateWithPermission(sysRole *model.SysRole, permIds []int)
 
 	// ----------------------- start session -----------------------
 
-	_, err = session.ID(sysRole.Id).Cols("is_disable", "name", "display_name").Update(sysRole)
+	_, err = session.ID(m.Id).Cols("is_disable", "name", "display_name").Update(m)
 	if err != nil {
 		_ = session.Rollback()
 		return err
@@ -78,7 +78,7 @@ func (r *Repository) UpdateWithPermission(sysRole *model.SysRole, permIds []int)
 
 	permLen := len(permIds)
 	if permLen > 0 {
-		_, err = session.Where("sys_role_id = ?", sysRole.Id).Delete(&model.SysRolePermission{})
+		_, err = session.Where("sys_role_id = ?", m.Id).Delete(&model.SysRolePermission{})
 		if err != nil {
 			_ = session.Rollback()
 			return err
@@ -87,7 +87,7 @@ func (r *Repository) UpdateWithPermission(sysRole *model.SysRole, permIds []int)
 		var rolePerm = make([]*model.SysRolePermission, permLen)
 		for i := range permIds {
 			rolePerm[i] = &model.SysRolePermission{
-				SysRoleId:       sysRole.Id,
+				SysRoleId:       m.Id,
 				SysPermissionId: permIds[i],
 			}
 		}
