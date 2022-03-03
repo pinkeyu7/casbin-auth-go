@@ -7,6 +7,10 @@ type ListSysRole struct {
 	SystemId  int `form:"system_id" validate:"omitempty"`
 }
 
+type GetSysRole struct {
+	AccountId int `form:"account_id" validate:"required"`
+}
+
 type AddSysRole struct {
 	AccountId     int    `json:"account_id" validate:"required"`
 	SystemId      int    `json:"system_id" validate:"required"`
