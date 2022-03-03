@@ -5,6 +5,7 @@ import (
 	"casbin-auth-go/dto/apireq"
 	sysRepo "casbin-auth-go/internal/system/system/repository"
 	sysSrv "casbin-auth-go/internal/system/system/service"
+	tokenLibrary "casbin-auth-go/internal/token/library"
 	"casbin-auth-go/pkg/er"
 	"casbin-auth-go/pkg/valider"
 	"github.com/gin-gonic/gin"
@@ -19,6 +20,7 @@ import (
 // @Tags System
 // @Security Bearer
 // @Param Bearer header string true "JWT Token"
+// @Param account_id query int true "Account ID"
 // @Param page query string true "Page"
 // @Param per_page query string true "Per Page"
 // @Success 200 {object} apires.ListSystem
@@ -45,6 +47,13 @@ func ListSystem(c *gin.Context) {
 		return
 	}
 
+	// 驗證 jwt user == user_id
+	err = tokenLibrary.CheckJWTAccountId(c, req.AccountId)
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
 	env := api.GetEnv()
 	sc := sysRepo.NewCache(env.RedisCluster)
 	sr := sysRepo.NewRepository(env.Orm, sc)
@@ -66,6 +75,7 @@ func ListSystem(c *gin.Context) {
 // @Security Bearer
 // @Param Bearer header string true "JWT Token"
 // @Param system_id path int true "系統id e.g. 11"
+// @Param account_id query int true "Account ID"
 // @Success 200 {object} model.System
 // @Failure 400 {object} er.AppErrorMsg "{"code":"400400","message":"Wrong parameter format or invalid"}"
 // @Failure 401 {object} er.AppErrorMsg "{"code":"400401","message":"Unauthorized"}"
@@ -79,6 +89,29 @@ func GetSystem(c *gin.Context) {
 	if err != nil {
 		paramErr := er.NewAppErr(http.StatusBadRequest, er.ErrorParamInvalid, "system id format error.", err)
 		_ = c.Error(paramErr)
+		return
+	}
+
+	req := apireq.GetSystem{}
+	err = c.Bind(&req)
+	if err != nil {
+		paramErr := er.NewAppErr(http.StatusBadRequest, er.ErrorParamInvalid, err.Error(), err)
+		_ = c.Error(paramErr)
+		return
+	}
+
+	// 參數驗證
+	err = valider.Validate.Struct(req)
+	if err != nil {
+		paramErr := er.NewAppErr(http.StatusBadRequest, er.ErrorParamInvalid, err.Error(), err)
+		_ = c.Error(paramErr)
+		return
+	}
+
+	// 驗證 jwt user == user_id
+	err = tokenLibrary.CheckJWTAccountId(c, req.AccountId)
+	if err != nil {
+		_ = c.Error(err)
 		return
 	}
 
@@ -124,6 +157,13 @@ func AddSystem(c *gin.Context) {
 	if err != nil {
 		paramErr := er.NewAppErr(http.StatusBadRequest, er.ErrorParamInvalid, err.Error(), err)
 		_ = c.Error(paramErr)
+		return
+	}
+
+	// 驗證 jwt user == user_id
+	err = tokenLibrary.CheckJWTAccountId(c, req.AccountId)
+	if err != nil {
+		_ = c.Error(err)
 		return
 	}
 
@@ -178,6 +218,13 @@ func EditSystem(c *gin.Context) {
 	if err != nil {
 		paramErr := er.NewAppErr(http.StatusBadRequest, er.ErrorParamInvalid, err.Error(), err)
 		_ = c.Error(paramErr)
+		return
+	}
+
+	// 驗證 jwt user == user_id
+	err = tokenLibrary.CheckJWTAccountId(c, req.AccountId)
+	if err != nil {
+		_ = c.Error(err)
 		return
 	}
 

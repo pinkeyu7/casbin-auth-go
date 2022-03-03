@@ -1,9 +1,14 @@
 package apireq
 
 type ListSystem struct {
-	ListType string `form:"list_type" validate:"omitempty"`
-	Page     int    `form:"page" validate:"required,numeric"`
-	PerPage  int    `form:"per_page" validate:"required,numeric"`
+	AccountId int    `form:"account_id" validate:"required"`
+	ListType  string `form:"list_type" validate:"omitempty"`
+	Page      int    `form:"page" validate:"required,numeric"`
+	PerPage   int    `form:"per_page" validate:"required,numeric"`
+}
+
+type GetSystem struct {
+	AccountId int `form:"account_id" validate:"required"`
 }
 
 type AddSystem struct {
