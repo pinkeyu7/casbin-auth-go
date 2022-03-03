@@ -12,51 +12,6 @@ import (
 	"strconv"
 )
 
-// AddSystem
-// @Summary Add System 新增系統
-// @Produce json
-// @Accept json
-// @Tags System
-// @Security Bearer
-// @Param Bearer header string true "JWT Token"
-// @Param Body body apireq.AddSystem true "Request Add System"
-// @Success 200 {string} string "{}"
-// @Failure 400 {object} er.AppErrorMsg "{"code":"400400","message":"Wrong parameter format or invalid"}"
-// @Failure 401 {object} er.AppErrorMsg "{"code":"400401","message":"Unauthorized"}"
-// @Failure 403 {object} er.AppErrorMsg "{"code":"400403","message":"Permission denied"}"
-// @Failure 404 {object} er.AppErrorMsg "{"code":"400404","message":"Resource not found"}"
-// @Failure 500 {object} er.AppErrorMsg "{"code":"500000","message":"Database unknown error"}"
-// @Router /v1/systems [post]
-func AddSystem(c *gin.Context) {
-	req := apireq.AddSystem{}
-	err := c.BindJSON(&req)
-	if err != nil {
-		paramErr := er.NewAppErr(http.StatusBadRequest, er.ErrorParamInvalid, err.Error(), err)
-		_ = c.Error(paramErr)
-		return
-	}
-
-	// 參數驗證
-	err = valider.Validate.Struct(req)
-	if err != nil {
-		paramErr := er.NewAppErr(http.StatusBadRequest, er.ErrorParamInvalid, err.Error(), err)
-		_ = c.Error(paramErr)
-		return
-	}
-
-	env := api.GetEnv()
-	sc := sysRepo.NewCache(env.RedisCluster)
-	sr := sysRepo.NewRepository(env.Orm, sc)
-	ss := sysSrv.NewService(sr)
-	err = ss.AddSystem(&req)
-	if err != nil {
-		_ = c.Error(err)
-		return
-	}
-
-	c.JSON(http.StatusOK, map[string]interface{}{})
-}
-
 // ListSystem
 // @Summary List System 系統列表
 // @Produce json
@@ -138,6 +93,51 @@ func GetSystem(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, res)
+}
+
+// AddSystem
+// @Summary Add System 新增系統
+// @Produce json
+// @Accept json
+// @Tags System
+// @Security Bearer
+// @Param Bearer header string true "JWT Token"
+// @Param Body body apireq.AddSystem true "Request Add System"
+// @Success 200 {string} string "{}"
+// @Failure 400 {object} er.AppErrorMsg "{"code":"400400","message":"Wrong parameter format or invalid"}"
+// @Failure 401 {object} er.AppErrorMsg "{"code":"400401","message":"Unauthorized"}"
+// @Failure 403 {object} er.AppErrorMsg "{"code":"400403","message":"Permission denied"}"
+// @Failure 404 {object} er.AppErrorMsg "{"code":"400404","message":"Resource not found"}"
+// @Failure 500 {object} er.AppErrorMsg "{"code":"500000","message":"Database unknown error"}"
+// @Router /v1/systems [post]
+func AddSystem(c *gin.Context) {
+	req := apireq.AddSystem{}
+	err := c.BindJSON(&req)
+	if err != nil {
+		paramErr := er.NewAppErr(http.StatusBadRequest, er.ErrorParamInvalid, err.Error(), err)
+		_ = c.Error(paramErr)
+		return
+	}
+
+	// 參數驗證
+	err = valider.Validate.Struct(req)
+	if err != nil {
+		paramErr := er.NewAppErr(http.StatusBadRequest, er.ErrorParamInvalid, err.Error(), err)
+		_ = c.Error(paramErr)
+		return
+	}
+
+	env := api.GetEnv()
+	sc := sysRepo.NewCache(env.RedisCluster)
+	sr := sysRepo.NewRepository(env.Orm, sc)
+	ss := sysSrv.NewService(sr)
+	err = ss.AddSystem(&req)
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	c.JSON(http.StatusOK, map[string]interface{}{})
 }
 
 // EditSystem
