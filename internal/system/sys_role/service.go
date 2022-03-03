@@ -6,6 +6,7 @@ import (
 )
 
 type Service interface {
+	ListSysRole(req *apireq.ListSysRole) (*apires.ListSysRole, error)
 	AddSysRoleWithPermission(req *apireq.AddSysRole) error
 	EditSysRoleWithPermission(sysRoleId int, req *apireq.EditSysRole) error
 	GetSysRoleWithPermission(sysRoleId int) (*apires.SysRoleWithPermissionIds, error)

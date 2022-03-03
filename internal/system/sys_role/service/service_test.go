@@ -10,6 +10,7 @@ import (
 	sysRepo "casbin-auth-go/internal/system/system/repository"
 	"casbin-auth-go/pkg/er"
 	"casbin-auth-go/pkg/valider"
+	"fmt"
 	"github.com/stretchr/testify/assert"
 	_ "go/types"
 	"log"
@@ -41,6 +42,61 @@ func setUp() {
 	}
 
 	valider.Init()
+}
+
+func TestService_ListSysRole(t *testing.T) {
+	// Arrange
+	redis, _ := driver.NewRedis()
+	orm, _ := driver.NewXorm()
+
+	sc := sysRepo.NewCache(redis)
+	sr := sysRepo.NewRepository(orm, sc)
+	spr := sysPermRepo.NewRepository(orm)
+	srr := sysRoleRepo.NewRepository(orm)
+	srs := NewService(srr, sr, spr)
+
+	// Act
+	testCases := []struct {
+		SystemId  int
+		PerPage   int
+		Page      int
+		WantCount int
+	}{
+		{
+			0,
+			10,
+			1,
+			4,
+		},
+		{
+			1,
+			10,
+			1,
+			1,
+		},
+		{
+			2,
+			10,
+			1,
+			3,
+		},
+	}
+	// Act
+	for _, tc := range testCases {
+		tc := tc
+		t.Run(fmt.Sprintf("List Sys Role,System Id:%d,Page:%d,PerPage:%d", tc.SystemId, tc.Page, tc.PerPage), func(t *testing.T) {
+			req := apireq.ListSysRole{
+				SystemId: tc.SystemId,
+				Page:     tc.Page,
+				PerPage:  tc.PerPage,
+			}
+
+			data, err := srs.ListSysRole(&req)
+			assert.Nil(t, err)
+			assert.Len(t, data.List, tc.WantCount)
+			assert.Equal(t, tc.WantCount, data.Total)
+		})
+	}
 }
 
 func TestService_AddSysRoleWithPermission(t *testing.T) {

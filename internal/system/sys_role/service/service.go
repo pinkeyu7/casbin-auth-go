@@ -9,6 +9,7 @@ import (
 	"casbin-auth-go/internal/system/system"
 	"casbin-auth-go/pkg/casbin"
 	"casbin-auth-go/pkg/er"
+	"gopkg.in/guregu/null.v4"
 	"net/http"
 )
 
@@ -24,6 +25,62 @@ func NewService(srr sys_role.Repository, sr system.Repository, spr sys_permissio
 		sysRoleRepo: srr,
 		sysPermRepo: spr,
 	}
+}
+
+func (s *Service) ListSysRole(req *apireq.ListSysRole) (*apires.ListSysRole, error) {
+	// Check system exist
+	sysId := req.SystemId
+	if sysId != 0 {
+		sys, err := s.sysRepo.FindOne(&model.System{Id: sysId})
+		if err != nil {
+			findErr := er.NewAppErr(http.StatusInternalServerError, er.UnknownError, "find system error.", err)
+			return nil, findErr
+		}
+		if sys == nil || sys.IsDisable {
+			notFoundErr := er.NewAppErr(http.StatusBadRequest, er.ResourceNotFoundError, "system not found.", nil)
+			return nil, notFoundErr
+		}
+	}
+
+	page := req.Page
+	perPage := req.PerPage
+
+	if page <= 1 {
+		page = 1
+	}
+
+	if perPage <= 1 {
+		perPage = 1
+	}
+
+	offset := (page - 1) * perPage
+
+	total, err := s.sysRoleRepo.Count(sysId)
+	if err != nil {
+		countErr := er.NewAppErr(http.StatusInternalServerError, er.UnknownError, "count sys role error.", err)
+		return nil, countErr
+	}
+
+	data, err := s.sysRoleRepo.Find(sysId, offset, perPage)
+	if err != nil {
+		findErr := er.NewAppErr(http.StatusInternalServerError, er.UnknownError, "find sys role error.", err)
+		return nil, findErr
+	}
+
+	res := &apires.ListSysRole{
+		List:        data,
+		Total:       total,
+		CurrentPage: page,
+		PerPage:     perPage,
+	}
+
+	// 判斷 offset 加上資料筆數，是否仍小於總筆數,是的話回傳下一頁頁數
+	dataCount := len(data)
+	if (offset + dataCount) < total {
+		res.NextPage = null.IntFrom(int64(page) + int64(1))
+	}
+
+	return res, nil
 }
 
 func (s *Service) AddSysRoleWithPermission(req *apireq.AddSysRole) error {
