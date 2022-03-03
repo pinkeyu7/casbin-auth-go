@@ -15,8 +15,8 @@ import (
 	"strconv"
 )
 
-// ListPermission
-// @Summary List Permission 取得系統權限列表
+// ListSysPermission
+// @Summary List System Permission 取得系統權限列表
 // @Produce json
 // @Accept json
 // @Tags Permission
@@ -33,7 +33,7 @@ import (
 // @Failure 404 {object} er.AppErrorMsg "{"code":"400404","message":"Resource not found"}"
 // @Failure 500 {object} er.AppErrorMsg "{"code":"500000","message":"Database unknown error"}"
 // @Router /v1/permissions [get]
-func ListPermission(c *gin.Context) {
+func ListSysPermission(c *gin.Context) {
 	req := apireq.ListSysPermission{}
 	err := c.Bind(&req)
 	if err != nil {
@@ -63,7 +63,7 @@ func ListPermission(c *gin.Context) {
 	sperr := sysPermRepo.NewRepository(env.Orm)
 	spers := sysPermSrv.NewService(sperr, sr)
 
-	res, err := spers.ListPermission(&req)
+	res, err := spers.ListSysPermission(&req)
 	if err != nil {
 		_ = c.Error(err)
 		return
@@ -72,13 +72,13 @@ func ListPermission(c *gin.Context) {
 	c.JSON(http.StatusOK, res)
 }
 
-// AddPermission
+// AddSysPermission
 // @Summary Add System Permission 新增系統權限
 // @Produce json
 // @Accept json
 // @Tags Permission
 // @Security Bearer
-// @Param Bearer header string true "Admin JWT Token"
+// @Param Bearer header string true "JWT Token"
 // @Param Body body apireq.AddSysPermission true "Request Add System Permission"
 // @Success 200 {string} string "{}"
 // @Failure 400 {object} er.AppErrorMsg "{"code":"400400","message":"Wrong parameter format or invalid"}"
@@ -87,7 +87,7 @@ func ListPermission(c *gin.Context) {
 // @Failure 404 {object} er.AppErrorMsg "{"code":"400404","message":"Resource not found"}"
 // @Failure 500 {object} er.AppErrorMsg "{"code":"500000","message":"Database unknown error"}"
 // @Router /v1/permissions [post]
-func AddPermission(c *gin.Context) {
+func AddSysPermission(c *gin.Context) {
 	req := apireq.AddSysPermission{}
 	err := c.BindJSON(&req)
 	if err != nil {
@@ -116,7 +116,7 @@ func AddPermission(c *gin.Context) {
 	sperr := sysPermRepo.NewRepository(env.Orm)
 	spers := sysPermSrv.NewService(sperr, sr)
 
-	err = spers.AddPermission(&req)
+	err = spers.AddSysPermission(&req)
 	if err != nil {
 		_ = c.Error(err)
 		return
@@ -125,13 +125,13 @@ func AddPermission(c *gin.Context) {
 	c.JSON(http.StatusOK, map[string]interface{}{})
 }
 
-// EditPermission
+// EditSysPermission
 // @Summary Edit System Permission 編輯系統權限
 // @Produce json
 // @Accept json
 // @Tags Permission
 // @Security Bearer
-// @Param Bearer header string true "Admin JWT Token"
+// @Param Bearer header string true "JWT Token"
 // @Param permission_id path int true "Permission ID"
 // @Param Body body apireq.EditSysPermission true "Request Edit System Permission"
 // @Success 200 {string} string "{}"
@@ -141,7 +141,7 @@ func AddPermission(c *gin.Context) {
 // @Failure 404 {object} er.AppErrorMsg "{"code":"400404","message":"Resource not found"}"
 // @Failure 500 {object} er.AppErrorMsg "{"code":"500000","message":"Database unknown error"}"
 // @Router /v1/permissions/{permission_id} [put]
-func EditPermission(c *gin.Context) {
+func EditSysPermission(c *gin.Context) {
 	id := c.Param("id")
 	permId, err := strconv.Atoi(id)
 	if err != nil {
@@ -178,7 +178,7 @@ func EditPermission(c *gin.Context) {
 	sperr := sysPermRepo.NewRepository(env.Orm)
 	spers := sysPermSrv.NewService(sperr, sr)
 
-	err = spers.EditPermission(permId, &req)
+	err = spers.EditSysPermission(permId, &req)
 	if err != nil {
 		_ = c.Error(err)
 		return
@@ -187,13 +187,13 @@ func EditPermission(c *gin.Context) {
 	c.JSON(http.StatusOK, map[string]interface{}{})
 }
 
-// DeletePermission
+// DeleteSysPermission
 // @Summary Delete System Permission 刪除系統權限
 // @Produce json
 // @Accept json
 // @Tags Permission
 // @Security Bearer
-// @Param Bearer header string true "Admin JWT Token"
+// @Param Bearer header string true "JWT Token"
 // @Param permission_id path int true "Permission ID"
 // @Param Body body apireq.DeleteSysPermission true "Request Delete System Permission"
 // @Success 200 {string} string "{}"
@@ -203,7 +203,7 @@ func EditPermission(c *gin.Context) {
 // @Failure 404 {object} er.AppErrorMsg "{"code":"400404","message":"Resource not found"}"
 // @Failure 500 {object} er.AppErrorMsg "{"code":"500000","message":"Database unknown error"}"
 // @Router /v1/permissions/{permission_id} [delete]
-func DeletePermission(c *gin.Context) {
+func DeleteSysPermission(c *gin.Context) {
 	id := c.Param("id")
 	permId, err := strconv.Atoi(id)
 	if err != nil {
@@ -241,7 +241,7 @@ func DeletePermission(c *gin.Context) {
 	sperr := sysPermRepo.NewRepository(env.Orm)
 	spers := sysPermSrv.NewService(sperr, sr)
 
-	err = spers.DeletePermission(permId, srr)
+	err = spers.DeleteSysPermission(permId, srr)
 	if err != nil {
 		_ = c.Error(err)
 		return

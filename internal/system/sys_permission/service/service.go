@@ -25,7 +25,7 @@ func NewService(spr sys_permission.Repository, sr system.Repository) sys_permiss
 	}
 }
 
-func (s *Service) ListPermission(req *apireq.ListSysPermission) (*apires.ListSysPermission, error) {
+func (s *Service) ListSysPermission(req *apireq.ListSysPermission) (*apires.ListSysPermission, error) {
 	// Check system exist
 	sysId := req.SystemId
 	if sysId != 0 {
@@ -61,7 +61,7 @@ func (s *Service) ListPermission(req *apireq.ListSysPermission) (*apires.ListSys
 
 	data, err := s.sysPermRepo.Find(sysId, offset, perPage)
 	if err != nil {
-		findErr := er.NewAppErr(http.StatusInternalServerError, er.UnknownError, "find system error.", err)
+		findErr := er.NewAppErr(http.StatusInternalServerError, er.UnknownError, "find sys permission error.", err)
 		return nil, findErr
 	}
 
@@ -81,7 +81,7 @@ func (s *Service) ListPermission(req *apireq.ListSysPermission) (*apires.ListSys
 	return res, nil
 }
 
-func (s *Service) AddPermission(req *apireq.AddSysPermission) error {
+func (s *Service) AddSysPermission(req *apireq.AddSysPermission) error {
 	sys, err := s.sysRepo.FindOne(&model.System{Id: req.SystemId})
 	if err != nil {
 		findErr := er.NewAppErr(http.StatusInternalServerError, er.UnknownError, "find system error.", err)
@@ -123,7 +123,7 @@ func (s *Service) AddPermission(req *apireq.AddSysPermission) error {
 	return nil
 }
 
-func (s *Service) EditPermission(sysPermId int, req *apireq.EditSysPermission) error {
+func (s *Service) EditSysPermission(sysPermId int, req *apireq.EditSysPermission) error {
 	// Check sys permission exist
 	perm, err := s.sysPermRepo.FindOne(&model.SysPermission{Id: sysPermId})
 	if err != nil {
@@ -151,7 +151,7 @@ func (s *Service) EditPermission(sysPermId int, req *apireq.EditSysPermission) e
 	return nil
 }
 
-func (s *Service) DeletePermission(sysPermId int, sysRoleRepo sys_role.Repository) error {
+func (s *Service) DeleteSysPermission(sysPermId int, sysRoleRepo sys_role.Repository) error {
 	// Check sys permission exist
 	perm, err := s.sysPermRepo.FindOne(&model.SysPermission{Id: sysPermId})
 	if err != nil {

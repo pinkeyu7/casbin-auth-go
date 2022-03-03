@@ -7,8 +7,8 @@ import (
 )
 
 type Service interface {
-	ListPermission(req *apireq.ListSysPermission) (*apires.ListSysPermission, error)
-	AddPermission(req *apireq.AddSysPermission) error
-	EditPermission(sysPermId int, req *apireq.EditSysPermission) error
-	DeletePermission(sysPermId int, sysRoleRepo sys_role.Repository) error
+	ListSysPermission(req *apireq.ListSysPermission) (*apires.ListSysPermission, error)
+	AddSysPermission(req *apireq.AddSysPermission) error
+	EditSysPermission(sysPermId int, req *apireq.EditSysPermission) error
+	DeleteSysPermission(sysPermId int, sysRoleRepo sys_role.Repository) error
 }

@@ -41,7 +41,7 @@ func setUp() {
 	valider.Init()
 }
 
-func TestService_ListPermission(t *testing.T) {
+func TestService_ListSysPermission(t *testing.T) {
 	// Arrange
 	redis, _ := driver.NewRedis()
 	orm, _ := driver.NewXorm()
@@ -87,7 +87,7 @@ func TestService_ListPermission(t *testing.T) {
 				PerPage:  tc.PerPage,
 			}
 
-			data, err := sps.ListPermission(&req)
+			data, err := sps.ListSysPermission(&req)
 			assert.Nil(t, err)
 			assert.Len(t, data.List, tc.WantCount)
 			assert.Equal(t, tc.WantCount, data.Total)
@@ -95,7 +95,7 @@ func TestService_ListPermission(t *testing.T) {
 	}
 }
 
-func TestService_AddPermission(t *testing.T) {
+func TestService_AddSysPermission(t *testing.T) {
 	// Arrange
 	redis, _ := driver.NewRedis()
 	orm, _ := driver.NewXorm()
@@ -115,7 +115,7 @@ func TestService_AddPermission(t *testing.T) {
 	}
 
 	// Act
-	err := sps.AddPermission(&req)
+	err := sps.AddSysPermission(&req)
 
 	// Assert
 	assert.Nil(t, err)
@@ -124,7 +124,7 @@ func TestService_AddPermission(t *testing.T) {
 	_, _ = orm.Where("slug = ? ", req.Slug).Delete(&model.SysPermission{})
 }
 
-func TestService_EditPermission(t *testing.T) {
+func TestService_EditSysPermission(t *testing.T) {
 	// Arrange
 	redis, _ := driver.NewRedis()
 	orm, _ := driver.NewXorm()
@@ -145,7 +145,7 @@ func TestService_EditPermission(t *testing.T) {
 	}
 
 	// Act
-	err := sps.EditPermission(permId, &req)
+	err := sps.EditSysPermission(permId, &req)
 
 	// Assert
 	assert.Nil(t, err)
@@ -154,7 +154,7 @@ func TestService_EditPermission(t *testing.T) {
 	_, _ = orm.ID(permId).Update(&perm)
 }
 
-func TestService_DeletePermission(t *testing.T) {
+func TestService_DeleteSysPermission(t *testing.T) {
 	// Arrange
 	redis, _ := driver.NewRedis()
 	orm, _ := driver.NewXorm()
@@ -175,7 +175,7 @@ func TestService_DeletePermission(t *testing.T) {
 	_, _ = orm.Insert(&m)
 
 	// Act
-	err := sps.DeletePermission(m.Id, srr)
+	err := sps.DeleteSysPermission(m.Id, srr)
 
 	// Assert
 	assert.Nil(t, err)

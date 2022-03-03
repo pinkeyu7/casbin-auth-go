@@ -12,21 +12,21 @@ func SysPermissionV1(r *gin.Engine) {
 
 	// 列表 系統權限
 	v1Auth.GET("/", func(c *gin.Context) {
-		apiV1.ListPermission(c)
+		apiV1.ListSysPermission(c)
 	})
 
 	// 新增 系統權限
 	v1Auth.POST("/", func(c *gin.Context) {
-		apiV1.AddPermission(c)
+		apiV1.AddSysPermission(c)
 	})
 
 	// 編輯 系統權限
 	v1Auth.PUT("/:id", func(c *gin.Context) {
-		apiV1.EditPermission(c)
+		apiV1.EditSysPermission(c)
 	})
 
 	// 刪除 系統權限
 	v1Auth.DELETE("/:id", func(c *gin.Context) {
-		apiV1.DeletePermission(c)
+		apiV1.DeleteSysPermission(c)
 	})
 }
