@@ -29,7 +29,7 @@ func AllSysAccount() []Seed {
 		{
 			Name: "Create System Account - Admin Permission - 1",
 			Run: func(engine *xorm.Engine) error {
-				err := CreateSysAccount(engine, 1, "pinke", "pinke.yu7@gmail.com", "123456", "Pinke")
+				err := CreateSysAccount(engine, 1, "sys_account", "sys_account@testing.com", "123456", "Pinke")
 				return err
 			},
 		},

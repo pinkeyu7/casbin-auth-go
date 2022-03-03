@@ -49,7 +49,7 @@ func TestService_GenToken(t *testing.T) {
 	// No data
 	req := apireq.GetSysAccountToken{
 		Account:  "sys_account",
-		Password: "123456",
+		Password: "password",
 	}
 
 	// Act
@@ -65,7 +65,7 @@ func TestService_GenToken(t *testing.T) {
 	// Has data
 	req = apireq.GetSysAccountToken{
 		Account:  "sys_account",
-		Password: "A12345678",
+		Password: "123456",
 	}
 
 	// Act
