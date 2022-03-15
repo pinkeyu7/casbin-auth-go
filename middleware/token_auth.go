@@ -5,9 +5,10 @@ import (
 	tokenLibrary "casbin-auth-go/internal/token/library"
 	tokenRepo "casbin-auth-go/internal/token/repository"
 	"casbin-auth-go/pkg/er"
-	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
+
+	"github.com/gin-gonic/gin"
 )
 
 func TokenAuth() gin.HandlerFunc {
@@ -39,7 +40,7 @@ func TokenAuth() gin.HandlerFunc {
 
 		// Jwt token state management
 		env := api.GetEnv()
-		tc := tokenRepo.NewRedis(env.RedisCluster)
+		tc := tokenRepo.NewCache(env.RedisCluster)
 		serverIat, _ := tc.GetTokenIat(accId)
 		if jwtIat < serverIat {
 			iatErr := er.NewAppErr(http.StatusUnauthorized, er.UnauthorizedError, "token is expired.", nil)

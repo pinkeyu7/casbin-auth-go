@@ -8,13 +8,14 @@ import (
 	tokenRepo "casbin-auth-go/internal/token/repository"
 	"casbin-auth-go/pkg/er"
 	"casbin-auth-go/pkg/valider"
-	"github.com/joho/godotenv"
-	"github.com/stretchr/testify/assert"
 	"log"
 	"net/http"
 	"os"
 	"strconv"
 	"testing"
+
+	"github.com/joho/godotenv"
+	"github.com/stretchr/testify/assert"
 
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -42,8 +43,9 @@ func TestService_GenToken(t *testing.T) {
 	// Arrange
 	orm, _ := driver.NewXorm()
 	rc, _ := driver.NewRedis()
+
 	sar := sysAccRepo.NewRepository(orm)
-	tc := tokenRepo.NewRedis(rc)
+	tc := tokenRepo.NewCache(rc)
 	ts := NewService(sar, tc)
 
 	// No data

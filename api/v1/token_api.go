@@ -8,8 +8,9 @@ import (
 	tokenSrv "casbin-auth-go/internal/token/service"
 	"casbin-auth-go/pkg/er"
 	"casbin-auth-go/pkg/valider"
-	"github.com/gin-gonic/gin"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
 // GetToken
@@ -44,7 +45,7 @@ func GetToken(c *gin.Context) {
 
 	env := api.GetEnv()
 	sar := sysAccRepo.NewRepository(env.Orm)
-	tc := tokenRepo.NewRedis(env.RedisCluster)
+	tc := tokenRepo.NewCache(env.RedisCluster)
 	ts := tokenSrv.NewService(sar, tc)
 	res, err := ts.GenToken(&req)
 	if err != nil {

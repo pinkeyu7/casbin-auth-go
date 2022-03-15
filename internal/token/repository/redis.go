@@ -2,15 +2,16 @@ package repository
 
 import (
 	"casbin-auth-go/internal/token"
-	"github.com/go-redis/redis/v7"
 	"strconv"
+
+	"github.com/go-redis/redis/v7"
 )
 
 type Cache struct {
 	redisCluster *redis.ClusterClient
 }
 
-func NewRedis(rc *redis.ClusterClient) token.Cache {
+func NewCache(rc *redis.ClusterClient) token.Cache {
 	return &Cache{
 		redisCluster: rc,
 	}

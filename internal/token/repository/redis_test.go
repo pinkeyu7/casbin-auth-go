@@ -4,12 +4,13 @@ import (
 	"casbin-auth-go/config"
 	"casbin-auth-go/driver"
 	"casbin-auth-go/pkg/valider"
-	"github.com/joho/godotenv"
-	"github.com/stretchr/testify/assert"
 	"log"
 	"os"
 	"testing"
 	"time"
+
+	"github.com/joho/godotenv"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestMain(m *testing.M) {
@@ -34,7 +35,7 @@ func setUp() {
 func TestCache_GetTokenIat(t *testing.T) {
 	// Arrange
 	rc, _ := driver.NewRedis()
-	tc := NewRedis(rc)
+	tc := NewCache(rc)
 
 	accId := 1
 	newIat := int64(1594698129)
@@ -54,7 +55,7 @@ func TestCache_GetTokenIat(t *testing.T) {
 func TestCache_SetTokenIat(t *testing.T) {
 	// Arrange
 	rc, _ := driver.NewRedis()
-	tc := NewRedis(rc)
+	tc := NewCache(rc)
 
 	accId := 1
 	iat := time.Now().UTC().Unix()
