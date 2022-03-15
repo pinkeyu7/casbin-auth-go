@@ -48,6 +48,20 @@ func TokenAuth() gin.HandlerFunc {
 			return
 		}
 
+		// Check casbin permission
+		_ = env.Casbin.LoadPolicy()
+		access, err := env.Casbin.Enforce(jwtAccountId, c.Request.URL.Path, c.Request.Method)
+		if err != nil {
+			permissionErr := er.NewAppErr(http.StatusInternalServerError, er.UnknownError, "permission error.", err)
+			c.AbortWithStatusJSON(permissionErr.GetStatus(), permissionErr.GetMsg())
+			return
+		}
+		if !access {
+			accessDeniedErr := er.NewAppErr(http.StatusForbidden, er.ForbiddenError, "access denied.", nil)
+			c.AbortWithStatusJSON(accessDeniedErr.GetStatus(), accessDeniedErr.GetMsg())
+			return
+		}
+
 		// Set claims
 		c.Set("claims", claims)
 		c.Set("account_id", accId)

@@ -7,6 +7,7 @@ import (
 	"casbin-auth-go/pkg/valider"
 	"casbin-auth-go/route"
 	"flag"
+
 	_ "github.com/go-sql-driver/mysql"
 	log "github.com/sirupsen/logrus"
 )
@@ -37,6 +38,9 @@ func main() {
 	_ = api.InitXorm()
 	_ = api.InitRedis()
 	_ = api.InitRedisCluster()
+
+	// init Casbin
+	api.InitCasbin()
 
 	// init gin router
 	r := route.Init()

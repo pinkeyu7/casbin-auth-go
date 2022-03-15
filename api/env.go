@@ -2,7 +2,10 @@ package api
 
 import (
 	"casbin-auth-go/driver"
+	casbinPkg "casbin-auth-go/pkg/casbin"
 	"log"
+
+	"github.com/casbin/casbin/v2"
 
 	"github.com/go-redis/redis/v7"
 	"xorm.io/xorm"
@@ -12,6 +15,7 @@ type Env struct {
 	Orm          *xorm.EngineGroup
 	Redis        *redis.Client
 	RedisCluster *redis.ClusterClient
+	Casbin       *casbin.Enforcer
 }
 
 var env = &Env{}
@@ -50,4 +54,8 @@ func InitRedisCluster() *redis.ClusterClient {
 	}
 
 	return env.RedisCluster
+}
+
+func InitCasbin() {
+	env.Casbin = casbinPkg.Init()
 }
