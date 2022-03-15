@@ -2,12 +2,48 @@
 
 此為 Casbin auth 後端 API 專案，使用 GO 語言進行開發。
 
+## Casbin rule
+
 主要用來實作 casbin auth 的驗證機制，權限綁定方式為
 
 ```
 account -> role -> permission
 ```
+
 每個帳號可以綁定一個角色，每個角色可以綁定多個權限，藉此來達到權限控管。
+
+### Casbin rule table
+
+| p_type |      v0      |     v1     |      v2      |
+| ------ | :----------: | :--------: | :----------: |
+| g      | {account_id} | {role_id}  |              |
+| p      |  {role_id}   | {uri_path} | {uri_method} |
+
+uri_method 欄位為 { GET | POST | PUT | DELETE}
+
+uri_path 內變數的部分以冒號表示，e.g. `:id`
+
+#### 1. 開放所有權限
+
+針對 account_id = 1 的帳號，綁定 role_id = 1 的角色，並給予所有權限
+
+| p_type | v0  | v1  | v2  |
+| ------ | :-: | :-: | :-: |
+| g      |  1  |  1  |     |
+| p      |  1  | ./  | ./  |
+
+#### 2. 開放特定 API 權限
+
+針對 account_id = 2 的帳號，綁定 role_id = 2 的角色，並給予特定 API 權限
+
+| p_type | v0  |        v1        |   v2   |
+| ------ | :-: | :--------------: | :----: |
+| g      |  2  |        2         |        |
+| p      |  2  |   /v1/contacts   |  GET   |
+| p      |  2  | /v1/contacts/:id |  GET   |
+| p      |  2  |   /v1/contacts   |  POST  |
+| p      |  2  | /v1/contacts/:id |  PUT   |
+| p      |  2  | /v1/contacts/:id | DELETE |
 
 ## GO
 
@@ -74,7 +110,7 @@ make migrate-down
 ### How to develop?
 
 ```shell
-go install 
+go install
 go run main.go
 ```
 
@@ -101,5 +137,3 @@ swag init
 ```
 
 2. And then you take [Swagger document](http://localhost:8080/swagger/index.html)
-
- 
