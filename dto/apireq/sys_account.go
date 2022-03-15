@@ -29,3 +29,8 @@ type EditSysAccount struct {
 type ForgotSysAccountPassword struct {
 	AccountId int `json:"account_id" validate:"required"`
 }
+
+type ChangePassword struct {
+	OldPassword string `json:"old_password" validate:"required"`
+	NewPassword string `json:"new_password" validate:"required,max=16,min=8,necsfield=OldPassword"`
+}

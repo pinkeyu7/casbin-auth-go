@@ -125,7 +125,7 @@ func (s *Service) AddSysAccount(req *apireq.AddSysAccount) error {
 		return findErr
 	}
 	if acc == nil || acc.IsDisable {
-		notFoundErr := er.NewAppErr(http.StatusBadRequest, er.ResourceNotFoundError, "account not found.", nil)
+		notFoundErr := er.NewAppErr(http.StatusBadRequest, er.ResourceNotFoundError, "sys account not found.", nil)
 		return notFoundErr
 	}
 
