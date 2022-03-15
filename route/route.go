@@ -6,10 +6,11 @@ import (
 	"casbin-auth-go/middleware"
 	"casbin-auth-go/pkg/request_cache"
 	"fmt"
-	"github.com/gin-contrib/cors"
-	"github.com/gin-gonic/gin"
 	"os"
 	"time"
+
+	"github.com/gin-contrib/cors"
+	"github.com/gin-gonic/gin"
 
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"github.com/swaggo/gin-swagger/swaggerFiles"
@@ -47,6 +48,7 @@ func Init() *gin.Engine {
 	SystemV1(r)
 	SysPermissionV1(r)
 	SysRoleV1(r)
+	SysAccountV1(r)
 
 	return r
 }
