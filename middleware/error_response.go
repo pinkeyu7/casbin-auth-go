@@ -4,10 +4,12 @@ import (
 	"casbin-auth-go/pkg/er"
 	"casbin-auth-go/pkg/logr"
 	"encoding/json"
+	"net/http"
+	"strings"
+
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	"go.uber.org/zap"
-	"strings"
 )
 
 func ErrorResponse() gin.HandlerFunc {
@@ -30,7 +32,7 @@ func ErrorResponse() gin.HandlerFunc {
 			}
 
 			msg := strings.Join(msgs, " , ") + " is wrong format or invalid"
-			appErr := er.NewAppErr(400, er.ErrorParamInvalid, msg, vErr)
+			appErr := er.NewAppErr(http.StatusBadRequest, er.ErrorParamInvalid, msg, vErr)
 			errMsgBytes, _ := json.Marshal(appErr.GetMsg())
 
 			logger.Error(
@@ -47,7 +49,7 @@ func ErrorResponse() gin.HandlerFunc {
 			appErr := err.Err.(*er.AppError)
 
 			// auto log error, only 500 error will log now
-			if appErr.StatusCode == 500 || appErr.StatusCode == 400 {
+			if appErr.StatusCode == http.StatusInternalServerError || appErr.StatusCode == http.StatusBadRequest {
 				errMsgBytes, _ := json.Marshal(appErr.GetMsg())
 				causeBytes, _ := json.Marshal(appErr.CauseErr)
 
