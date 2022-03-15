@@ -1,8 +1,9 @@
 package apires
 
 import (
-	"gopkg.in/guregu/null.v4"
 	"time"
+
+	"gopkg.in/guregu/null.v4"
 )
 
 type ListSysAccount struct {
@@ -35,9 +36,11 @@ type SysAccount struct {
 	Name      string    `xorm:"not null default '' VARCHAR(64)" json:"name"`
 	IsDisable bool      `xorm:"not null is_disable" json:"is_disable"`
 	VerifyAt  time.Time `xorm:"DATETIME" json:"verify_at"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
 }
 
 type SysAccountWithRole struct {
 	SysAccount `xorm:"extends"`
-	SysRoleId  int64 `xorm:"sys_role_id" json:"sys_role_id"`
+	SysRoleId  int `xorm:"sys_role_id" json:"sys_role_id"`
 }
