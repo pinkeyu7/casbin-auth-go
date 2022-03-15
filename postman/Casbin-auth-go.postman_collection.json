@@ -1,0 +1,1220 @@
+{
+	"info": {
+		"_postman_id": "dc6c2795-5565-4ac1-8289-c391bc0182e0",
+		"name": "Casbin-auth-go",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Token",
+			"item": [
+				{
+					"name": "token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"// test task",
+									"tests[\"Status 200\"] = responseCode.code === 200;",
+									"tests[\"Response time < 3000ms\"] = responseTime < 3000;",
+									"tests[\"Body match json format\"] = jsonData;",
+									"tests[\"Status code is not 401\"] = responseCode.code !== 401;",
+									"// test index",
+									"tests[\"Includes : token\"] = responseBody.has(\"token\");",
+									"tests[\"Includes : expired_at\"] = responseBody.has(\"expired_at\");",
+									"// test data",
+									"tests[\"Not null : token\"] = jsonData.token !== \"\";",
+									"tests[\"Not null : expired_at\"] = jsonData.expired_at !== \"\";",
+									"",
+									"// save variable to env",
+									"postman.setEnvironmentVariable(\"BEARER\", jsonData.token);",
+									"",
+									"var parts = jsonData.token.split('.');",
+									"var payload = JSON.parse(atob(parts[1]))",
+									"postman.setEnvironmentVariable('ACCOUNT_ID', payload.account_id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"system_id\": 1,\n    \"account\": \"sys_account\",\n    \"password\": \"123456\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{SITE_URL}}/v1/token",
+							"host": [
+								"{{SITE_URL}}"
+							],
+							"path": [
+								"v1",
+								"token"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Systems",
+			"item": [
+				{
+					"name": "systems",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// var jsonData = JSON.parse(responseBody);",
+									"",
+									"// test task",
+									"tests[\"Status 200\"] = responseCode.code === 200;",
+									"tests[\"Response time < 3000ms\"] = responseTime < 3000;",
+									"// tests[\"Body match json format\"] = jsonData;",
+									"tests[\"Status code is not 401\"] = responseCode.code !== 401;",
+									"// test data"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{BEARER}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "bearer",
+								"value": "{{BEARER}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"account_id\": {{ACCOUNT_ID}},\n    \"name\": \"test system name\",\n    \"system_type\": \"AP\",\n    \"tag\": \"AP002\",\n    \"email\": \"pinke.yu7@gmail.com\",\n    \"tel\": \"0905800880\",\n    \"address\": \"somewhere on earth\",\n    \"uuid\": \"AP001\",\n    \"quota\": 0,\n    \"ip_address\": [\n        \"*\"\n    ],\n    \"mac_address\": [\n        \"*\"\n    ],\n    \"principal\": \"\",\n    \"salesman\": \"\",\n    \"salesman_phone\": \"\",\n    \"copy_from_system\": 0\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{SITE_URL}}/v1/systems",
+							"host": [
+								"{{SITE_URL}}"
+							],
+							"path": [
+								"v1",
+								"systems"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "systems",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// var jsonData = JSON.parse(responseBody);",
+									"",
+									"// test task",
+									"tests[\"Status 200\"] = responseCode.code === 200;",
+									"tests[\"Response time < 3000ms\"] = responseTime < 3000;",
+									"// tests[\"Body match json format\"] = jsonData;",
+									"tests[\"Status code is not 401\"] = responseCode.code !== 401;",
+									"// test data"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "bearer",
+								"value": "{{BEARER}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{SITE_URL}}/v1/systems?account_id={{ACCOUNT_ID}}&page=1&per_page=25",
+							"host": [
+								"{{SITE_URL}}"
+							],
+							"path": [
+								"v1",
+								"systems"
+							],
+							"query": [
+								{
+									"key": "account_id",
+									"value": "{{ACCOUNT_ID}}"
+								},
+								{
+									"key": "list_type",
+									"value": "enable",
+									"disabled": true
+								},
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "per_page",
+									"value": "25"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "systems/{system_id}",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// var jsonData = JSON.parse(responseBody);",
+									"",
+									"// test task",
+									"tests[\"Status 200\"] = responseCode.code === 200;",
+									"tests[\"Response time < 3000ms\"] = responseTime < 3000;",
+									"// tests[\"Body match json format\"] = jsonData;",
+									"tests[\"Status code is not 401\"] = responseCode.code !== 401;",
+									"// test data"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "bearer",
+								"value": "{{BEARER}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{SITE_URL}}/v1/systems/:system_id?account_id={{ACCOUNT_ID}}",
+							"host": [
+								"{{SITE_URL}}"
+							],
+							"path": [
+								"v1",
+								"systems",
+								":system_id"
+							],
+							"query": [
+								{
+									"key": "account_id",
+									"value": "{{ACCOUNT_ID}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "system_id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "systems/{system_id}",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// var jsonData = JSON.parse(responseBody);",
+									"",
+									"// test task",
+									"tests[\"Status 200\"] = responseCode.code === 200;",
+									"tests[\"Response time < 3000ms\"] = responseTime < 3000;",
+									"// tests[\"Body match json format\"] = jsonData;",
+									"tests[\"Status code is not 401\"] = responseCode.code !== 401;",
+									"// test data"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{BEARER}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "bearer",
+								"value": "{{BEARER}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"account_id\": {{ACCOUNT_ID}},\n    \"name\": \"test system name\",\n    \"tel\": \"0905800880\",\n    \"address\": \"somewhere on earth\",\n    \"ip_address\": [\n        \"*\"\n    ],\n    \"is_disable\": false,\n    \"mac_address\": [\n        \"*\"\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{SITE_URL}}/v1/systems/:system_id",
+							"host": [
+								"{{SITE_URL}}"
+							],
+							"path": [
+								"v1",
+								"systems",
+								":system_id"
+							],
+							"variable": [
+								{
+									"key": "system_id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Sys Permissions",
+			"item": [
+				{
+					"name": "permissions",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// var jsonData = JSON.parse(responseBody);",
+									"",
+									"// test task",
+									"tests[\"Status 200\"] = responseCode.code === 200;",
+									"tests[\"Response time < 3000ms\"] = responseTime < 3000;",
+									"// tests[\"Body match json format\"] = jsonData;",
+									"tests[\"Status code is not 401\"] = responseCode.code !== 401;",
+									"// test data"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{BEARER}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "bearer",
+								"value": "{{BEARER}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"account_id\": {{ACCOUNT_ID}},\n    \"system_id\": 2,\n    \"action\": \"get\",\n    \"allow_api_path\": \"/test_api_path/\",\n    \"description\": \"test_description\",\n    \"slug\": \"test_slug\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{SITE_URL}}/v1/permissions",
+							"host": [
+								"{{SITE_URL}}"
+							],
+							"path": [
+								"v1",
+								"permissions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "permissions",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// var jsonData = JSON.parse(responseBody);",
+									"",
+									"// test task",
+									"tests[\"Status 200\"] = responseCode.code === 200;",
+									"tests[\"Response time < 3000ms\"] = responseTime < 3000;",
+									"// tests[\"Body match json format\"] = jsonData;",
+									"tests[\"Status code is not 401\"] = responseCode.code !== 401;",
+									"// test data"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "bearer",
+								"value": "{{BEARER}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{SITE_URL}}/v1/permissions?account_id={{ACCOUNT_ID}}&page=1&per_page=25&system_id=",
+							"host": [
+								"{{SITE_URL}}"
+							],
+							"path": [
+								"v1",
+								"permissions"
+							],
+							"query": [
+								{
+									"key": "account_id",
+									"value": "{{ACCOUNT_ID}}"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "per_page",
+									"value": "25"
+								},
+								{
+									"key": "system_id",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "permissions/{permission_id}",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// var jsonData = JSON.parse(responseBody);",
+									"",
+									"// test task",
+									"tests[\"Status 200\"] = responseCode.code === 200;",
+									"tests[\"Response time < 3000ms\"] = responseTime < 3000;",
+									"// tests[\"Body match json format\"] = jsonData;",
+									"tests[\"Status code is not 401\"] = responseCode.code !== 401;",
+									"// test data"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{BEARER}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "bearer",
+								"value": "{{BEARER}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"account_id\": {{ACCOUNT_ID}},\n    \"description\": \"test_description\",\n    \"slug\": \"test_slug\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{SITE_URL}}/v1/permissions/:permission_id",
+							"host": [
+								"{{SITE_URL}}"
+							],
+							"path": [
+								"v1",
+								"permissions",
+								":permission_id"
+							],
+							"variable": [
+								{
+									"key": "permission_id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "permissions/{permission_id}",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// var jsonData = JSON.parse(responseBody);",
+									"",
+									"// test task",
+									"tests[\"Status 200\"] = responseCode.code === 200;",
+									"tests[\"Response time < 3000ms\"] = responseTime < 3000;",
+									"// tests[\"Body match json format\"] = jsonData;",
+									"tests[\"Status code is not 401\"] = responseCode.code !== 401;",
+									"// test data"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{BEARER}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "bearer",
+								"value": "{{BEARER}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"account_id\": {{ACCOUNT_ID}}\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{SITE_URL}}/v1/permissions/:permission_id",
+							"host": [
+								"{{SITE_URL}}"
+							],
+							"path": [
+								"v1",
+								"permissions",
+								":permission_id"
+							],
+							"variable": [
+								{
+									"key": "permission_id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Sys Roles",
+			"item": [
+				{
+					"name": "roles",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// var jsonData = JSON.parse(responseBody);",
+									"",
+									"// test task",
+									"tests[\"Status 200\"] = responseCode.code === 200;",
+									"tests[\"Response time < 3000ms\"] = responseTime < 3000;",
+									"// tests[\"Body match json format\"] = jsonData;",
+									"tests[\"Status code is not 401\"] = responseCode.code !== 401;",
+									"// test data"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{BEARER}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "bearer",
+								"value": "{{BEARER}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"account_id\": {{ACCOUNT_ID}},\n    \"display_name\": \"test_display_name\",\n    \"name\": \"test_name\",\n    \"permission_ids\": [\n        \n    ],\n    \"system_id\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{SITE_URL}}/v1/roles",
+							"host": [
+								"{{SITE_URL}}"
+							],
+							"path": [
+								"v1",
+								"roles"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "roles",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// var jsonData = JSON.parse(responseBody);",
+									"",
+									"// test task",
+									"tests[\"Status 200\"] = responseCode.code === 200;",
+									"tests[\"Response time < 3000ms\"] = responseTime < 3000;",
+									"// tests[\"Body match json format\"] = jsonData;",
+									"tests[\"Status code is not 401\"] = responseCode.code !== 401;",
+									"// test data"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "bearer",
+								"value": "{{BEARER}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{SITE_URL}}/v1/roles?account_id={{ACCOUNT_ID}}&page=1&per_page=25",
+							"host": [
+								"{{SITE_URL}}"
+							],
+							"path": [
+								"v1",
+								"roles"
+							],
+							"query": [
+								{
+									"key": "account_id",
+									"value": "{{ACCOUNT_ID}}"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "per_page",
+									"value": "25"
+								},
+								{
+									"key": "system_id",
+									"value": "3",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "roles/{role_id}",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// var jsonData = JSON.parse(responseBody);",
+									"",
+									"// test task",
+									"tests[\"Status 200\"] = responseCode.code === 200;",
+									"tests[\"Response time < 3000ms\"] = responseTime < 3000;",
+									"// tests[\"Body match json format\"] = jsonData;",
+									"tests[\"Status code is not 401\"] = responseCode.code !== 401;",
+									"// test data"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "bearer",
+								"value": "{{BEARER}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{SITE_URL}}/v1/roles/:role_id?account_id={{ACCOUNT_ID}}",
+							"host": [
+								"{{SITE_URL}}"
+							],
+							"path": [
+								"v1",
+								"roles",
+								":role_id"
+							],
+							"query": [
+								{
+									"key": "account_id",
+									"value": "{{ACCOUNT_ID}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "role_id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "roles/{role_id}",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// var jsonData = JSON.parse(responseBody);",
+									"",
+									"// test task",
+									"tests[\"Status 200\"] = responseCode.code === 200;",
+									"tests[\"Response time < 3000ms\"] = responseTime < 3000;",
+									"// tests[\"Body match json format\"] = jsonData;",
+									"tests[\"Status code is not 401\"] = responseCode.code !== 401;",
+									"// test data"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{BEARER}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "bearer",
+								"value": "{{BEARER}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"account_id\": {{ACCOUNT_ID}},\n    \"display_name\": \"test_display_name_dd\",\n    \"is_disable\": false,\n    \"name\": \"test_name_ddd\",\n    \"permission_ids\": []\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{SITE_URL}}/v1/roles/:role_id",
+							"host": [
+								"{{SITE_URL}}"
+							],
+							"path": [
+								"v1",
+								"roles",
+								":role_id"
+							],
+							"variable": [
+								{
+									"key": "role_id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Sys Accounts",
+			"item": [
+				{
+					"name": "accounts",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// var jsonData = JSON.parse(responseBody);",
+									"",
+									"// test task",
+									"tests[\"Status 200\"] = responseCode.code === 200;",
+									"tests[\"Response time < 3000ms\"] = responseTime < 3000;",
+									"// tests[\"Body match json format\"] = jsonData;",
+									"tests[\"Status code is not 401\"] = responseCode.code !== 401;",
+									"// test data"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{BEARER}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "bearer",
+								"value": "{{BEARER}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"account_id\": {{ACCOUNT_ID}},\n    \"system_id\": 1,\n    \"account\": \"testint_account\",\n    \"email\": \"testing_email@testmail.com\",\n    \"name\": \"test_name\",\n    \"phone\": \"+886-900-998-880\",\n    \"role_id\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{SITE_URL}}/v1/accounts",
+							"host": [
+								"{{SITE_URL}}"
+							],
+							"path": [
+								"v1",
+								"accounts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "accounts",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// var jsonData = JSON.parse(responseBody);",
+									"",
+									"// test task",
+									"tests[\"Status 200\"] = responseCode.code === 200;",
+									"tests[\"Response time < 3000ms\"] = responseTime < 3000;",
+									"// tests[\"Body match json format\"] = jsonData;",
+									"tests[\"Status code is not 401\"] = responseCode.code !== 401;",
+									"// test data"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "bearer",
+								"value": "{{BEARER}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{SITE_URL}}/v1/accounts?account_id={{ACCOUNT_ID}}&page=1&per_page=25&system_id=1",
+							"host": [
+								"{{SITE_URL}}"
+							],
+							"path": [
+								"v1",
+								"accounts"
+							],
+							"query": [
+								{
+									"key": "account_id",
+									"value": "{{ACCOUNT_ID}}"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "per_page",
+									"value": "25"
+								},
+								{
+									"key": "system_id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "accounts/{account_id}",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// var jsonData = JSON.parse(responseBody);",
+									"",
+									"// test task",
+									"tests[\"Status 200\"] = responseCode.code === 200;",
+									"tests[\"Response time < 3000ms\"] = responseTime < 3000;",
+									"// tests[\"Body match json format\"] = jsonData;",
+									"tests[\"Status code is not 401\"] = responseCode.code !== 401;",
+									"// test data"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "bearer",
+								"value": "{{BEARER}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{SITE_URL}}/v1/accounts/:account_id?account_id={{ACCOUNT_ID}}",
+							"host": [
+								"{{SITE_URL}}"
+							],
+							"path": [
+								"v1",
+								"accounts",
+								":account_id"
+							],
+							"query": [
+								{
+									"key": "account_id",
+									"value": "{{ACCOUNT_ID}}"
+								}
+							],
+							"variable": [
+								{
+									"key": "account_id",
+									"value": "4"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "accounts/{account_id}",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// var jsonData = JSON.parse(responseBody);",
+									"",
+									"// test task",
+									"tests[\"Status 200\"] = responseCode.code === 200;",
+									"tests[\"Response time < 3000ms\"] = responseTime < 3000;",
+									"// tests[\"Body match json format\"] = jsonData;",
+									"tests[\"Status code is not 401\"] = responseCode.code !== 401;",
+									"// test data"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{BEARER}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "bearer",
+								"value": "{{BEARER}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"account_id\": {{ACCOUNT_ID}},\n    \"email\": \"testing_email@testmail.com\",\n    \"is_disable\": false,\n    \"name\": \"test_name_ddd\",\n    \"phone\": \"+886-990-999-999\",\n    \"role_id\": 3\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{SITE_URL}}/v1/accounts/:account_id",
+							"host": [
+								"{{SITE_URL}}"
+							],
+							"path": [
+								"v1",
+								"accounts",
+								":account_id"
+							],
+							"variable": [
+								{
+									"key": "account_id",
+									"value": "4"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "accounts/{account_id}/forgot-password",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// var jsonData = JSON.parse(responseBody);",
+									"",
+									"// test task",
+									"tests[\"Status 200\"] = responseCode.code === 200;",
+									"tests[\"Response time < 3000ms\"] = responseTime < 3000;",
+									"// tests[\"Body match json format\"] = jsonData;",
+									"tests[\"Status code is not 401\"] = responseCode.code !== 401;",
+									"// test data"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{BEARER}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "bearer",
+								"value": "{{BEARER}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"account_id\": {{ACCOUNT_ID}}\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{SITE_URL}}/v1/accounts/:account_id/forgot-password",
+							"host": [
+								"{{SITE_URL}}"
+							],
+							"path": [
+								"v1",
+								"accounts",
+								":account_id",
+								"forgot-password"
+							],
+							"variable": [
+								{
+									"key": "account_id",
+									"value": "4"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "accounts/{account_id}/change-password",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// var jsonData = JSON.parse(responseBody);",
+									"",
+									"// test task",
+									"tests[\"Status 200\"] = responseCode.code === 200;",
+									"tests[\"Response time < 3000ms\"] = responseTime < 3000;",
+									"// tests[\"Body match json format\"] = jsonData;",
+									"tests[\"Status code is not 401\"] = responseCode.code !== 401;",
+									"// test data"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{BEARER}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "bearer",
+								"value": "{{BEARER}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"new_password\": \"A12345678\",\n  \"old_password\": \"123456\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{SITE_URL}}/v1/accounts/:account_id/change-password",
+							"host": [
+								"{{SITE_URL}}"
+							],
+							"path": [
+								"v1",
+								"accounts",
+								":account_id",
+								"change-password"
+							],
+							"variable": [
+								{
+									"key": "account_id",
+									"value": "{{ACCOUNT_ID}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
