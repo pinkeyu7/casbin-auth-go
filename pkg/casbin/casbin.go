@@ -57,18 +57,17 @@ func NewAdapter() (*xormadapter.Adapter, error) {
 	return adapter, err
 }
 
-func AddUserRole(systemTag string, accountId, oldRoleId, newRoleId int64) (bool, error) {
+func AddUserRole(systemTag string, accountId, oldRoleId, newRoleId int) (bool, error) {
 	e := Init()
 
 	// 先刪除後新增
 	if oldRoleId != 0 {
-		_, err := e.DeleteRoleForUser(strconv.FormatInt(accountId, 10), strconv.FormatInt(oldRoleId, 10))
+		_, err := e.DeleteRoleForUser(strconv.Itoa(accountId), strconv.Itoa(oldRoleId))
 		if err != nil {
 			return false, err
 		}
 	}
-	// e.AddRoleForUserInDomain("eric", "admin", "hc")
-	added, err := e.AddRoleForUser(strconv.FormatInt(accountId, 10), strconv.FormatInt(newRoleId, 10))
+	added, err := e.AddRoleForUser(strconv.Itoa(accountId), strconv.Itoa(newRoleId))
 	return added, err
 }
 
