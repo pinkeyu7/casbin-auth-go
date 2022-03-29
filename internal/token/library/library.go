@@ -8,8 +8,8 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
+	"github.com/golang-jwt/jwt/v4"
 )
 
 func parseToken(tokenStr, salt string) (jwt.MapClaims, error) {
@@ -59,8 +59,8 @@ func GenToken(accId int) (string, time.Time, error) {
 	accIdStr := strconv.Itoa(accId)
 	token := jwt.NewWithClaims(jwt.SigningMethodHS384, jwt.MapClaims{
 		"iss":        "casbin-auth-go",
-		"exp":        exp, // Expiration Time,
-		"iat":        time.Now().UTC().Unix(),
+		"exp":        exp.Unix(),              // Expiration Time,
+		"iat":        time.Now().UTC().Unix(), // Issued At Time
 		"account_id": accIdStr,
 	})
 
